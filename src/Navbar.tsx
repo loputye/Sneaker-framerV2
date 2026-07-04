@@ -1,0 +1,31 @@
+// Navbar - rebuilt from this project's published Framer layout template.
+// The exported Main component does not include the site navigation (it lives
+// in a Framer layout template above the page), so we ship it as extracted
+// markup + extracted CSS (src/navbar.css) to keep pixel parity.
+import { useEffect } from 'react';
+import './navbar.css';
+
+const DESKTOP_NAV = `<div class="framer-1fp7q8p-container" data-framer-layout-hint-center-x="true"><nav class="framer-ZbLFP framer-KthDU framer-LV2Ws framer-69voxy framer-v-69voxy" data-framer-name="Primary Base" data-highlight="true" tabindex="0"><div class="framer-bym51b" data-border="true" data-framer-name="Content" style="--border-bottom-width:1px;--border-color:var(--token-914b1e49-c6dc-49fc-93ac-369519474e4f, rgb(227, 227, 227));--border-left-width:1px;--border-right-width:1px;--border-style:solid;--border-top-width:1px;--corner-shape-fallback:0.796;backdrop-filter:blur(40px);background-color:var(--token-9039c660-569a-421b-a527-9ac056ae9951, rgb(255, 255, 255));corner-shape:superellipse(1.4);-webkit-backdrop-filter:blur(40px);border-bottom-left-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));border-bottom-right-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));border-top-left-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));border-top-right-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));box-shadow:0px 1px 6px 0px rgba(0, 0, 0, 0.03)"><div class="framer-1rbb9bx" data-framer-name="Navbar" data-highlight="true"><!--$--><a aria-label="Home Page" class="framer-182dufq framer-892597" data-framer-name="Logo" draggable="false" href="./" data-framer-page-link-current="true"><div class="framer-Ttzji framer-115kfwi"></div></a><!--/$--><div class="framer-ccrmgb" data-framer-name="Links"><div class="framer-j5sndk" data-framer-name="Link" data-highlight="true" data-framer-component-type="RichTextContainer" style="--framer-paragraph-spacing:0px;opacity:1;transform:none"><p class="framer-text framer-styles-preset-10suf4d" data-styles-preset="kw43ePOKN" dir="auto"><!--$--><a class="framer-text framer-styles-preset-1eqj9u" data-styles-preset="QawiXOoTj" href="./shoes">Shop</a><!--/$--></p></div><div class="framer-1qiy5zp" data-framer-name="Link" data-highlight="true" data-framer-component-type="RichTextContainer" style="--framer-paragraph-spacing:0px;opacity:1;transform:none"><p class="framer-text framer-styles-preset-10suf4d" data-styles-preset="kw43ePOKN" dir="auto"><!--$--><a class="framer-text framer-styles-preset-1eqj9u" data-styles-preset="QawiXOoTj" href="./about">About</a><!--/$--></p></div><div class="framer-sb7a7p" data-framer-name="Link" data-highlight="true" data-framer-component-type="RichTextContainer" style="--framer-paragraph-spacing:0px;opacity:1;transform:none"><p class="framer-text framer-styles-preset-10suf4d" data-styles-preset="kw43ePOKN" dir="auto"><!--$--><a class="framer-text framer-styles-preset-1eqj9u" data-styles-preset="QawiXOoTj" href="./stores">Stores</a><!--/$--></p></div></div></div></div></nav></div>`;
+
+const PHONE_NAV = `<div class="framer-1fp7q8p-container" data-framer-layout-hint-center-x="true"><nav class="framer-ZbLFP framer-KthDU framer-LV2Ws framer-69voxy framer-v-eao4bo" data-framer-name="Secondary Base" data-highlight="true" tabindex="0" style="max-width:100%;width:100%"><div class="framer-bym51b" data-border="true" data-framer-name="Content" style="--border-bottom-width:1px;--border-color:var(--token-914b1e49-c6dc-49fc-93ac-369519474e4f, rgb(227, 227, 227));--border-left-width:1px;--border-right-width:1px;--border-style:solid;--border-top-width:1px;--corner-shape-fallback:0.796;backdrop-filter:blur(40px);background-color:var(--token-9039c660-569a-421b-a527-9ac056ae9951, rgb(255, 255, 255));corner-shape:superellipse(1.4);-webkit-backdrop-filter:blur(40px);border-bottom-left-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));border-bottom-right-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));border-top-left-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));border-top-right-radius:calc(36px*var(--one-if-corner-shape-supported,var(--corner-shape-fallback,1)));box-shadow:0px 1px 6px 0px rgba(0, 0, 0, 0.03)"><div class="framer-1rbb9bx" data-framer-name="Navbar"><!--$--><a aria-label="Home Page" class="framer-182dufq framer-892597" data-framer-name="Logo" draggable="false" href="./" data-framer-page-link-current="true"><div class="framer-Ttzji framer-115kfwi"></div></a><!--/$--><button aria-label="Phone Menu Button" class="framer-ysqbm4" data-framer-name="Menu Button" data-reset="button"><div class="framer-6vo9d9-container"><div class="framer-2d0gn framer-1ynw328 framer-v-1ynw328" data-framer-name="Menu"><div class="framer-1f89hg1" data-framer-name="Top Line" style="background-color:var(--token-27377471-6d4a-46b0-90a8-188d33236a38, rgb(133, 133, 133));border-bottom-left-radius:100px;border-bottom-right-radius:100px;border-top-left-radius:100px;border-top-right-radius:100px;transform:none"></div><div class="framer-t4pcvn" data-framer-name="Bottom Line" style="background-color:var(--token-27377471-6d4a-46b0-90a8-188d33236a38, rgb(133, 133, 133));border-bottom-left-radius:100px;border-bottom-right-radius:100px;border-top-left-radius:100px;border-top-right-radius:100px;transform:none"></div></div></div></button></div></div></nav></div>`;
+
+export default function Navbar() {
+  useEffect(() => {
+    // Phone menu button: swap the hamburger variant class on tap (the live
+    // template swaps the nav to its expanded variant; links overlay).
+    const btn = document.querySelector<HTMLButtonElement>('.nav-phone .framer-ysqbm4');
+    if (!btn) return;
+    const onClick = () => {
+      const menu = btn.querySelector('.framer-2d0gn');
+      menu?.classList.toggle('menu-open');
+    };
+    btn.addEventListener('click', onClick);
+    return () => btn.removeEventListener('click', onClick);
+  }, []);
+  return (
+    <>
+      <div className="framer-yshUJ nav-desktop" dangerouslySetInnerHTML={{ __html: DESKTOP_NAV }} />
+      <div className="framer-yshUJ nav-phone" dangerouslySetInnerHTML={{ __html: PHONE_NAV }} />
+    </>
+  );
+}

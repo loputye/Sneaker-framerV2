@@ -1,0 +1,105 @@
+/* Base reset matching Framer's published-page defaults */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: rgb(255, 255, 255);
+}
+
+body {
+  font-family: 'Inter', 'Inter Placeholder', sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* The Main component root should span the full width like Framer pages do */
+#root > .framer-o_WdBrVpR,
+#root [data-framer-name='Main'] {
+  width: 100%;
+}
+
+/* --- viewport-height restoration ------------------------------------------
+   The exporter flattened the canvas' viewport-relative heights to the canvas
+   viewport (800px). The published page uses vh units for these four rules;
+   restore them so section geometry matches the live site at any viewport. */
+.framer-1jt61op {
+  height: 100vh !important; /* Hero > Container (min 650px / max 1000px kept) */
+}
+.framer-o2ifc4 {
+  height: 100vh !important; /* Hero > Scroll Area */
+}
+.framer-11rbia9 {
+  height: 120vh !important; /* Shipping section */
+}
+.framer-3l2vuv {
+  height: 20vh !important; /* spacer */
+}
+
+/* Exporter flattened the phone-only left padding into the base Brands-row
+   rule; the published desktop page uses padding 0 (phone keeps 18px via the
+   higher-specificity variant rule below). */
+.framer-9Yclq .framer-13r2jrw {
+  padding: 0 !important;
+}
+.framer-9Yclq.framer-v-19r69f6 .framer-13r2jrw {
+  padding: 0 0 0 18px !important;
+}
+
+/* The published page wraps the hero info card (color name + description) in
+   an ssr-variant hidden-yhrtj wrapper — hidden entirely below 810px. The
+   exported bundle renders it unconditionally; mirror the live rule. */
+@media (max-width: 809.98px) {
+  .framer-9Yclq .framer-dg0nxu {
+    display: none !important;
+  }
+}
+
+/* "Cloud Back" appear animation resolves to translateX(-50%) + opacity .8 in
+   the published phone variant; the exporter flattened it to the desktop
+   final state (none / 1). Pin the live phone endpoint. */
+@media (max-width: 809.98px) {
+  .framer-9Yclq .framer-qvqw2a {
+    opacity: 0.8 !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* Hero title smart component renders with inline height:100% on the
+   published phone page; the exported bundle drops it, collapsing the
+   90px title box to the 80px line box. */
+@media (max-width: 809.98px) {
+  .framer-9Yclq .framer-1uiwh0j-container .framer-1r25u9g {
+    height: 100% !important;
+  }
+}
+
+/* Live keeps the hero title block at its authored 220px height on tablet
+   (base rule height:220px); the exported bundle collapses it to the 200px
+   line box, shifting the heading up 10px. */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .framer-9Yclq .framer-1uiwh0j-container .framer-1r25u9g {
+    height: 220px !important;
+  }
+}
