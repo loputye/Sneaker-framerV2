@@ -145,13 +145,13 @@ const INVIEW_SPECS: InViewSpec[] = [
 ];
 
 /**
- * Footer "SNEAKS" letters: the published layout template animates each letter
- * from its authored offset into place when the footer scrolls into view. Our
- * extracted footer is static markup, so we replay that variant switch here.
+ * Footer "SNEAKS" letters: on the published site each letter carries a
+ * scroll-linked transform (measured by sweeping the live page): it lerps
+ * linearly from its authored offset to 0 while the scroll position moves
+ * across the window in which the authored (offset)
+ * letter rect crosses the viewport bottom edge. Pure function of scrollY — reversible, no timers.
  */
 const FOOTER_LETTERS_SELECTOR = '.site-footer svg';
-const FOOTER_LETTER_STAGGER = 70; // ms between letters
-const FOOTER_LETTER_DUR = 700;
 
 const LOOP_SPECS: LoopSpec[] = [
   // Hero shoe shadow: 5s linear scale pulse (mirrors), baseline pinned
@@ -226,7 +226,7 @@ export default function FramerEffects() {
       | { kind: 'scroll'; spec: ScrollSpec; el: HTMLElement; section: HTMLElement; ease?: (x: number) => number }
       | { kind: 'loop'; spec: LoopSpec; el: HTMLElement }
       | { kind: 'inview'; spec: InViewSpec; el: HTMLElement; startedAt: number | null; done: boolean }
-      | { kind: 'letter'; el: HTMLElement; fromY: number; delay: number; startedAt: number | null; done: boolean };
+      | { kind: 'letter'; el: HTMLElement; fromY: number; curY: number };
 
     const bound: Bound[] = [];
     const observers: IntersectionObserver[] = [];
@@ -276,39 +276,15 @@ export default function FramerEffects() {
           .filter((f) => f.letters.length);
         if (footers.length) {
           lettersBound = true;
-          for (const { footer, letters } of footers) {
-            const entries: Extract<Bound, { kind: 'letter' }>[] = letters.map((el, i) => {
+          for (const { letters } of footers) {
+            for (const el of letters) {
               // Hidden copies compute transform as "none"; read the inline
               // SSR appear offset first, computed matrix as fallback.
               const inline = /translateY\((-?[\d.]+)px\)/.exec(el.style.transform);
               const mat = /matrix\([^)]*,\s*(-?[\d.]+)\)/.exec(getComputedStyle(el).transform);
               const fromY = Number(inline?.[1] ?? mat?.[1]) || 0;
-              const entry = { kind: 'letter' as const, el, fromY, delay: i * FOOTER_LETTER_STAGGER, startedAt: null, done: false };
-              bound.push(entry);
-              return entry;
-            });
-            const io = new IntersectionObserver(
-              (obs) => {
-                for (const e of obs) {
-                  if (e.isIntersecting) {
-                    const t = performance.now();
-                    entries.forEach((en) => { if (en.startedAt === null) en.startedAt = t; });
-                  } else {
-                    // Live replays the letter appear on every re-entry;
-                    // reset to the authored offsets while offscreen.
-                    if (document.documentElement.dataset.fxFreeze === '1') continue;
-                    entries.forEach((en) => {
-                      en.startedAt = null;
-                      en.done = false;
-                      en.el.style.setProperty('transform', `translateY(${en.fromY}px)`, 'important');
-                    });
-                  }
-                }
-              },
-              { threshold: 0.1 },
-            );
-            io.observe(footer);
-            observers.push(io);
+              bound.push({ kind: 'letter', el, fromY, curY: fromY });
+            }
           }
         }
       }
@@ -373,18 +349,16 @@ export default function FramerEffects() {
           set(el, 'transform', composeTransform(spec.base, state));
         } else {
           if (b.kind === 'letter') {
-            if (docEl.dataset.fxFreeze === '1') {
-              // deterministic-capture mode: pin at rest
-              b.el.style.setProperty('transform', 'translateY(0px)', 'important');
-              b.done = true;
-              continue;
-            }
-            if (b.done) continue;
-            if (b.startedAt === null) continue; // rest at authored offset until footer in view
-            const t = clamp01((now - b.startedAt - b.delay) / FOOTER_LETTER_DUR);
-            const y = lerp(b.fromY, 0, springEase(t));
+            const rect = b.el.getBoundingClientRect();
+            if (!rect.width || !b.fromY) continue; // hidden breakpoint copy
+            const natTop = rect.top + scrollY - b.curY;
+            // window: the authored (offset) letter rect crossing the
+            // viewport bottom edge — both edges shift by fromY
+            const start = natTop + b.fromY - vh;
+            const p = rect.height > 0 ? clamp01((scrollY - start) / rect.height) : 1;
+            const y = b.fromY * (1 - p);
             b.el.style.setProperty('transform', `translateY(${y}px)`, 'important');
-            if (t >= 1) b.done = true;
+            b.curY = y;
             continue;
           }
           const { spec, el } = b;

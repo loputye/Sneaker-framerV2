@@ -7,7 +7,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [
     react({
-      exclude: [/_framer-runtime\.js$/, /_responsive-runtime\.js$/, /\/framer\/Main\.js$/],
+      // Every precompiled bundle in src/framer/ (Main pages, floating
+      // companions, runtimes) must stay out of Fast Refresh.
+      exclude: [/\/framer\/[^/]+\.js$/],
     }),
   ],
   server: {

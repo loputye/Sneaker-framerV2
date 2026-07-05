@@ -23,7 +23,11 @@ body {
 }
 
 body {
-  font-family: 'Inter', 'Inter Placeholder', sans-serif;
+  /* Match the published page's body font context exactly: unstyled
+     descendants (e.g. table th/td) inherit it, and Chrome's intrinsic
+     table column sizing depends on the cell's own font. */
+  font-family: sans-serif;
+  font-size: 12px;
 }
 
 #root {

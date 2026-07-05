@@ -1,0 +1,73 @@
+/* Fixed-position slots for the floating companion components.
+ * Values are lifted from the published pages' generated CSS:
+ *   shoes    .framer-1dzow2d-container  → z-index:10; fixed; bottom:40px; centered; (≤810px: max-width:90%)
+ *   returns/shipping .framer-eh1m0w-container → z-index:10; width:80%; max-width:444px; fixed; bottom:44px; centered
+ *   stores   .framer-1ibfnms-container  → z-index:10; width:100%; fixed; bottom:0; left:0
+ */
+.floating-search-slot {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 250px; /* pill base width (live component root) */
+  height: auto;
+}
+/* Expanded variant grows the panel (live: 320px root) */
+.floating-search-slot:has(.framer-v-1cgfhsk) {
+  width: 320px;
+}
+@media (max-width: 809.98px) {
+  .floating-search-slot {
+    max-width: 90%;
+  }
+}
+
+.toc-popup-slot {
+  position: fixed;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 80%;
+  max-width: 444px;
+  height: auto;
+  display: none; /* published page shows the popup on phones only */
+  justify-content: center;
+}
+@media (max-width: 809.98px) {
+  .toc-popup-slot {
+    display: flex;
+  }
+}
+
+.sticky-foot-note-slot {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* The exporter flattened the TOC popup's Expanded pill height (320px on the
+   published page) to `auto`, which collapses its flex-basis-0 anchor list.
+   Restore it; the Collapsed variant keeps its own min-content rule. */
+.toc-popup-slot .framer-5NDJi.framer-1vmlp4i:not(.framer-v-zwjqpr) {
+  height: 320px !important;
+}
+
+/* Shipping hero, phone breakpoint: the published page renders three of the
+   delivery-box decorations at a constant scale(0.6) (the runtime drops the
+   phone variant's scale multiplier while still driving the x/y lerps).
+   Scaling the inner image wrapper composes identically and never fights the
+   runtime's per-frame inline transform writes on the box itself. */
+@media (max-width: 809.98px) {
+  .framer-127vuir [data-framer-background-image-wrapper],
+  .framer-1p14019 [data-framer-background-image-wrapper],
+  .framer-1v5hlsd [data-framer-background-image-wrapper] {
+    transform: scale(0.6) !important;
+  }
+}
